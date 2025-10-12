@@ -3,29 +3,35 @@ import Title from './Title'
 import { ourSpecsData } from '@/assets/assets'
 
 const OurSpecs = () => {
+  return (
+    <div className="px-4 sm:px-6 lg:px-8 my-24 max-w-7xl mx-auto">
+      <Title
+        visibleButton={false}
+        title="Our Specifications"
+        description="We deliver premium-quality service and convenience — making every shopping experience smooth, secure, and stress-free."
+      />
 
-    return (
-        <div className='px-6 my-20 max-w-6xl mx-auto'>
-            <Title visibleButton={false} title='Our Specifications' description="We offer top-tier service and convenience to ensure your shopping experience is smooth, secure and completely hassle-free." />
-
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 gap-y-10 mt-26'>
-                {
-                    ourSpecsData.map((spec, index) => {
-                        return (
-                            <div className='relative h-44 px-8 flex flex-col items-center justify-center w-full text-center border rounded-lg group' style={{ backgroundColor: spec.accent + 10, borderColor: spec.accent + 30 }} key={index}>
-                                <h3 className='text-slate-800 font-medium'>{spec.title}</h3>
-                                <p className='text-sm text-slate-600 mt-3'>{spec.description}</p>
-                                <div className='absolute -top-5 text-white size-10 flex items-center justify-center rounded-md group-hover:scale-105 transition' style={{ backgroundColor: spec.accent }}>
-                                    <spec.icon size={20} />
-                                </div>
-                            </div>
-                        )
-                    })
-                }
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+        {ourSpecsData.map((spec, index) => (
+          <div
+            key={index}
+            className="relative bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition p-8 text-center group"
+          >
+            <div
+              className="absolute -top-6 left-1/2 -translate-x-1/2 size-12 flex items-center justify-center rounded-xl shadow-md text-white group-hover:scale-110 transition"
+              style={{ backgroundColor: spec.accent }}
+            >
+              <spec.icon size={22} />
             </div>
-
-        </div>
-    )
+            <h3 className="mt-8 font-semibold text-lg text-slate-800">{spec.title}</h3>
+            <p className="text-slate-600 text-sm mt-3 leading-relaxed">
+              {spec.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export default OurSpecs
