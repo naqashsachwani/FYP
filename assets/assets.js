@@ -1,4 +1,5 @@
 import gs_logo from "./logo.jpg"
+import user from "./user.jpg"
 import happy_store from "./happy_store.webp"
 import upload_area from "./upload_area.svg"
 import hero_model_img from "./hero_model_img.png"
@@ -55,8 +56,8 @@ export const dummyStoreData = {
     updatedAt: "2025-09-04T09:04:44.273Z",
     user: {
         id: "user_31dOriXqC4TATvc0brIhlYbwwc5",
-        name: "Great Stack",
-        email: "user.greatstack@gmail.com",
+        name: "DreamSaver",
+        email: "user.dreamsaver@gmail.com",
         image: gs_logo,
     }
 }
@@ -334,7 +335,7 @@ export const storesDummyData = [
         address: "123 Maplewood Drive Springfield, IL 62704 USA",
         status: "approved",
         isActive: true,
-        logo: gs_logo,
+        logo: user,
         email: "greatstack@example.com",
         contact: "+0 1234567890",
         createdAt: "2025-08-22T08:22:16.189Z",
