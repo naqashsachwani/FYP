@@ -1,32 +1,25 @@
-import { clerkMiddleware, getAuth } from "@clerk/nextjs/server";
+import { clerkMiddleware, getAuth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { clerkClient } from "@clerk/clerk-sdk-node"; // ✅ use clerk-sdk-node here
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = getAuth(req);
-
-  if (!userId) {
-    return NextResponse.redirect(new URL("/sign-in", req.url));
-  }
+  if (!userId) return NextResponse.redirect(new URL("/sign-in", req.url));
 
   try {
-    // ✅ use clerkClient directly (not called as a function)
-    const user = await clerkClient.users.getUser(userId);
+    const client = await clerkClient();              // ← call it as a function
+    const user = await client.users.getUser(userId); // ← then use client.users
+    const userEmail = user.emailAddresses[0].emailAddress;
 
-    const adminEmails = process.env.ADMIN_EMAIL?.split(",") || [];
-    const isAdmin = adminEmails.includes(user.emailAddresses[0].emailAddress);
-
-    if (req.nextUrl.pathname.startsWith("/admin") && !isAdmin) {
+    const adminEmails = process.env.ADMIN_EMAIL?.split(",").map(e => e.trim()) || [];
+    if (req.nextUrl.pathname.startsWith("/admin") && !adminEmails.includes(userEmail)) {
       return new NextResponse("Access Denied", { status: 403 });
     }
-  } catch (error) {
-    console.error("Middleware error:", error);
+  } catch (err) {
+    console.error(err);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 
   return NextResponse.next();
 });
 
-export const config = {
-  matcher: ["/admin/:path*", "/api/:path*"],
-};
+export const config = { matcher: ["/admin/:path*", "/api/:path*"] };

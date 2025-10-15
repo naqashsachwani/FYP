@@ -10,8 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@clerk/clerk-sdk-node": "^4.13.23",
-    "@clerk/nextjs": "^6.33.3",
+    "@clerk/nextjs": "^6.33.4",
     "@neondatabase/serverless": "^1.0.2",
     "@prisma/adapter-neon": "^6.17.1",
     "@prisma/client": "^6.17.1",
