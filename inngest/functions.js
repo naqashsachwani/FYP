@@ -1,65 +1,73 @@
-import { inngest } from './client';
-import prisma from '@/lib/prisma';
+import { inngest } from "./client"
+import prisma from "@/lib/prisma"
 
-//Inngest Function to save user data to a database
+// Create user
 export const syncUserCreation = inngest.createFunction(
-    {id: 'sync-user-create'},
-    {event: 'clerk/user.created'},
-    async ({ event }) => {
-        const {data} = event
-        await prisma.user.create({
-            data: {
-                id: data.id,
-                email: data.email_addresses[0].email_address,
-                name: `${data.first_name} ${data.last_name}`,
-                image: data.image_url, 
-            }
-        })
-    }
+  { id: "sync-user-create" },
+  { event: "clerk/user.created" },
+  async ({ event }) => {
+    const { data } = event
+    if (!data?.id) return
+
+    await prisma.user.create({
+      data: {
+        id: data.id,
+        email: data.email_addresses[0]?.email_address || "",
+        name: `${data.first_name || ""} ${data.last_name || ""}`.trim(),
+        image: data.image_url || "",
+      },
+    })
+  }
 )
 
-// Inngest function to update user data in database
+// Update user
 export const syncUserUpdation = inngest.createFunction(
-   {id: 'sync-user-update'},
-   { event: 'clerk/user.updated'},
-   async ({ event }) => {
-const {data} = event
-        await prisma.user.update({
-            where: {id: data.id},
-            data: {
-                email: data.email_addresses[0].email_address,
-                name: `${data.first_name} ${data.last_name}`,
-                image: data.image_url, 
-            }
-        })
-    }
+  { id: "sync-user-update" },
+  { event: "clerk/user.updated" },
+  async ({ event }) => {
+    const { data } = event
+    if (!data?.id) return
+
+    await prisma.user.update({
+      where: { id: data.id },
+      data: {
+        email: data.email_addresses[0]?.email_address || "",
+        name: `${data.first_name || ""} ${data.last_name || ""}`.trim(),
+        image: data.image_url || "",
+      },
+    })
+  }
 )
 
-//Inngest Function to delete user from database
+// Delete user
 export const syncUserDeletion = inngest.createFunction(
-    {id: 'sync-user-delete'},
-    { event: 'clerk/user.deleted' },
-    async ({ event }) => {
-        const {data} = event
-        await prisma.user.delete({
-            where: {id: data.id}
-        })
-    }
+  { id: "sync-user-delete" },
+  { event: "clerk/user.deleted" },
+  async ({ event }) => {
+    const { data } = event
+    if (!data?.id) return
+
+    await prisma.user.delete({
+      where: { id: data.id },
+    })
+  }
 )
 
-// Inngest Function to delete coupon on expiry
+// Delete expired coupon
 export const deleteCouponOnExpiry = inngest.createFunction(
-    {id: 'delete-coupon-on-expiry'},
-    { event: `app/coupon.expired` },
-    async ({ event, step }) => {
-        const { data } = event
-        const  expiryDate = new Date(data.expires_at)
-        await step.sleepUntil('wait-for-expiry', expiryDate)
-        
-        await step.run('delete-coupon-from-database', async () => {
-            await prisma.coupon.delete({
-                where: { code: data.code}
-            })
-        })
-    }
+  { id: "delete-coupon-on-expiry" },
+  { event: "app/coupon.expired" },
+  async ({ event, step }) => {
+    const { data } = event
+    if (!data?.code || !data?.expires_at) return
+
+    const expiryDate = new Date(data.expires_at)
+    await step.sleepUntil("wait-for-expiry", expiryDate)
+
+    await step.run("delete-coupon-from-database", async () => {
+      await prisma.coupon.delete({
+        where: { code: data.code },
+      })
+    })
+  }
 )
