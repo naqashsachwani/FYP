@@ -81,13 +81,13 @@ const Navbar = () => {
               <span className="text-sm font-medium">Wishlist</span>
             </Link>
 
-            {/* Cart */}
+            {/* Goals */}
             <Link
               href="/cart"
               className="relative flex items-center gap-2 text-slate-600 hover:text-green-600 transition p-2 rounded-lg hover:bg-slate-100"
             >
               <ShoppingCart size={20} />
-              <span className="hidden sm:block text-sm font-medium">Cart</span>
+              <span className="hidden sm:block text-sm font-medium">My Goals</span>
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 text-xs text-white bg-green-500 size-5 rounded-full flex items-center justify-center shadow-md">
                   {cartCount}
@@ -108,7 +108,7 @@ const Navbar = () => {
                 <UserButton afterSignOutUrl="/">
                   <UserButton.MenuItems>
                     <UserButton.Action
-                      label="My Orders"
+                      label="My Goals"
                       labelIcon={<PackageIcon size={16} />}
                       onClick={() => router.push("/orders")}
                     />
