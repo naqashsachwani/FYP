@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useUser, useClerk, UserButton } from "@clerk/nextjs";
+import { useUser, useClerk, UserButton, Protect} from "@clerk/nextjs";
 
 const Navbar = () => {
   const { user } = useUser();
@@ -38,6 +38,12 @@ const Navbar = () => {
             <h1 className="text-3xl lg:text-4xl font-bold text-slate-800">
               <span className="text-green-600">Dream</span>Saver
             </h1>
+            <Protect plan='plus'>
+              <p className="abcolute text-xs font-semibold -top-1-right-8 px-3 p-0.5 rounded-full flex
+              items-center gap-2 text-white bg-green-500">
+                plus
+              </p>
+            </Protect>
             <span className="text-green-600 text-4xl lg:text-5xl absolute -top-1 -right-3">.</span>
           </Link>
 
