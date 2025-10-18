@@ -1,95 +1,74 @@
+import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import prisma from "@/lib/prisma";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-export async function POST(req) {
-  try {
-    // --- 1. Read the raw body correctly ---
-    const body = await req.text();
-    const sig = req.headers.get("stripe-signature");
+export async function POST(request){
+    try{
+        const body = await request.text()
+        const sig = request.get('stripe-signature')
 
-    // --- 2. Construct and verify event ---
-    const event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET // FIX: not process.nextTick
-    );
+        const event = stripe.webhooks.constructEvent(body, sig, process.nextTick.STRIPE_WEBHOOK_SECRET)
 
-    // --- 3. Function to handle success/failure ---
-    const handlePaymentIntent = async (paymentIntentId, isPaid) => {
-      const sessions = await stripe.checkout.sessions.list({
-        payment_intent: paymentIntentId,
-        limit: 1,
-      });
-
-      const session = sessions.data[0];
-      if (!session?.metadata) return;
-
-      const { orderIds, userId, appId } = session.metadata;
-
-      if (appId !== "dreamsaver") {
-        console.warn("Invalid appId:", appId);
-        return;
-      }
-
-      const orderIdsArray = orderIds.split(",");
-
-      if (isPaid) {
-        // ✅ Mark orders as paid
-        await Promise.all(
-          orderIdsArray.map((orderId) =>
-            prisma.order.update({
-              where: { id: orderId },
-              data: { isPaid: true },
+        const handlePaymentIntent = async (paymentIntentId, isPaid) => {
+            const session = await stripe.checkout.sessions.list({
+                payment_intent: paymentIntentId
             })
-          )
-        );
+            const {orderIds, userId, appId} = session.data[0].metadata
+        
 
-        // ✅ Empty user's cart
-        await prisma.user.update({
-          where: { id: userId },
-          data: { cart: {} },
-        });
-      } else {
-        // ❌ Delete unpaid orders
-        await Promise.all(
-          orderIdsArray.map((orderId) =>
-            prisma.order.delete({
-              where: { id: orderId },
-            })
-          )
-        );
-      }
-    };
+        if(appId !== 'dreamsaver'){
+            return NextResponse.json({received: true, message: 'Invalid app id'})
+        }
 
-    // --- 4. Handle event types ---
-    switch (event.type) {
-      case "payment_intent.succeeded":
-        await handlePaymentIntent(event.data.object.id, true);
-        break;
+        const orderIdsArray = orderIds.split(',')
 
-      case "payment_intent.canceled":
-      case "payment_intent.payment_failed":
-        await handlePaymentIntent(event.data.object.id, false);
-        break;
-
-      default:
-        console.log("Unhandled event type:", event.type);
-        break;
+        if(isPaid){
+            //mark order as paid
+            await Promise.all(orderIdsArray.map(async (orderId) => {
+                await prisma.order.update({
+                    where: {id: orderId},
+                    data: {isPaid: true}
+                })
+            }))
+            // delete cart from user
+             await prisma.user.update({
+                where: {id: userId},
+                data: {cart : {}}
+             })
+        } else {
+            //delete order from db
+            await Promise.all(orderIdsArray.map(async (orderId) => {
+                await prisma.order.delete({
+                    where: {id: orderId}
+                })
+            }))
+        }
     }
 
-    return NextResponse.json({ received: true });
-  } catch (error) {
-    console.error("❌ Webhook Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
+        switch (event.type) {
+            case 'payment_intent.succeeded': {
+                await handlePaymentIntent(event.data.object.id, true)
+                break;
+            }
+            case 'payment_intent.canceled': {
+                await handlePaymentIntent(event.data.object.id, false)
+                break;
+            }
+            default:
+                console.log('Unhandled event type:', event.type)
+                break;
+        }
+
+        return NextResponse.json({received: true})
+    } catch (error){
+        console.error(error)
+        return NextResponse.json({ error: error.message }, {status:400})
+
+    }
 }
 
-// --- 5. Disable body parsing (required for raw text) ---
 export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+    api: {bodyparser: false}
+}
