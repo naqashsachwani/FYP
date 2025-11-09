@@ -22,54 +22,16 @@ export default function StoreAddProduct() {
     category: "",
   })
   const [loading, setLoading] = useState(false)
-  const [aiUsed, setAiUsed] = useState(false)
   const { getToken } = useAuth()
 
   const onChangeHandler = (e) => {
-    setProductInfo({ ...productInfo, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    setProductInfo(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleImageUpload = async (key, file) => {
+  // Simplified image handler: just store the File object (no AI)
+  const handleImageUpload = (key, file) => {
     setImages(prev => ({ ...prev, [key]: file }))
-
-    if (key === "1" && file && !aiUsed) {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onloadend = async () => {
-        const base64String = reader.result.split(",")[1]
-        const mimeType = file.type
-        const token = await getToken()
-
-        try {
-          await toast.promise(
-            axios.post(
-              '/api/store/ai',
-              { base64Image: base64String, mimeType },
-              { headers: { Authorization: `Bearer ${token}` } }
-            ),
-            {
-              loading: "Analyzing image with AI...",
-              success: (res) => {
-                const data = res.data
-                if (data.name && data.description) {
-                  setProductInfo(prev => ({
-                    ...prev,
-                    name: data.name,
-                    description: data.description
-                  }))
-                  setAiUsed(true)
-                  return "AI filled product info"
-                }
-                return "AI could not analyze the image"
-              },
-              error: (err) => err?.response?.data?.error || err.message
-            }
-          )
-        } catch (error) {
-          console.error(error)
-        }
-      }
-    }
   }
 
   const onSubmitHandler = async (e) => {
@@ -93,10 +55,13 @@ export default function StoreAddProduct() {
 
       const token = await getToken()
       const { data } = await axios.post('/api/store/product', formData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
       })
 
-      toast.success(data.message)
+      toast.success(data?.message || "Product added")
       setProductInfo({ name: "", description: "", mrp: 0, price: 0, category: "" })
       setImages({ 1: null, 2: null, 3: null, 4: null })
     } catch (error) {
@@ -128,13 +93,16 @@ export default function StoreAddProduct() {
                 htmlFor={`images${key}`}
                 className="cursor-pointer hover:scale-[1.03] transition-transform"
               >
-                <Image
-                  width={200}
-                  height={200}
-                  className="h-24 w-full object-cover border border-slate-200 rounded-lg bg-slate-50"
-                  src={images[key] ? URL.createObjectURL(images[key]) : assets.upload_area}
-                  alt=""
-                />
+                <div className="relative">
+                  <Image
+                    width={200}
+                    height={200}
+                    className="h-24 w-full object-cover border border-slate-200 rounded-lg bg-slate-50"
+                    src={images[key] ? URL.createObjectURL(images[key]) : assets.upload_area}
+                    alt={`upload-${key}`}
+                  />
+                </div>
+
                 <input
                   type="file"
                   accept="image/*"
@@ -178,7 +146,7 @@ export default function StoreAddProduct() {
         {/* Price Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <label className="flex flex-col gap-2">
-            <span className="font-medium text-slate-700">Actual Price ($)</span>
+            <span className="font-medium text-slate-700">Actual Price (PKR)</span>
             <input
               type="number"
               name="mrp"
@@ -191,7 +159,7 @@ export default function StoreAddProduct() {
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="font-medium text-slate-700">Offer Price ($)</span>
+            <span className="font-medium text-slate-700">Offer Price (PKR)</span>
             <input
               type="number"
               name="price"

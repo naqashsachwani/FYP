@@ -6,7 +6,7 @@ import React from 'react'
 import CategoriesMarquee from './CategoriesMarquee'
 
 const Hero = () => {
-    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$'
+    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || 'Rs'
 
     return (
         <div className='mx-4 sm:mx-6'>
@@ -19,20 +19,19 @@ const Hero = () => {
                             <span className='bg-gradient-to-r from-green-600 to-emerald-500 px-3 py-1 rounded-full text-white text-xs font-bold shadow-md'>
                                 NEWS
                             </span>
-                            Free Shipping on Orders Above $50!
+                            Free Shipping on Orders Above Rs 5000!
                             <ChevronRightIcon className='group-hover:translate-x-1 transition-transform' size={16} />
                         </div>
 
                         <h2 className='text-2xl sm:text-4xl lg:text-5xl leading-tight font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-emerald-600 bg-clip-text text-transparent max-w-xs sm:max-w-md lg:max-w-lg mt-4 lg:mt-6'>
-                            Smart deals for smarter shoppers
+                            Saving Goals for smarter shoppers
                         </h2>
                         <p className='text-slate-600 text-sm sm:text-base mt-2 max-w-md'>
                             Exclusive offers only at DreamSaver
                         </p>
 
                         <div className='text-slate-800 font-bold mt-6 lg:mt-8'>
-                            <p className='text-sm'>Starts from</p>
-                            <p className='text-3xl sm:text-4xl bg-gradient-to-r from-slate-800 to-emerald-600 bg-clip-text text-transparent'>{currency}4.90</p>
+                            
                         </div>
 
                         <button className='bg-gradient-to-r from-slate-800 to-slate-700 text-white text-sm font-semibold py-3.5 px-8 sm:py-4 sm:px-14 mt-6 lg:mt-10 rounded-xl hover:from-slate-700 hover:to-slate-600 hover:shadow-2xl transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-lg'>
