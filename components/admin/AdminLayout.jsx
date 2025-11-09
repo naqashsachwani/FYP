@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import Loading from "../Loading"
 import Link from "next/link"
-import { ArrowRightIcon, CrownIcon } from "lucide-react"
+import { ArrowRightIcon, CrownIcon, Shield, Users, Settings, BarChart3 } from "lucide-react"
 import AdminNavbar from "./AdminNavbar"
 import AdminSidebar from "./AdminSidebar"
 import { useAuth, useUser } from "@clerk/nextjs"
@@ -36,27 +36,42 @@ export default function AdminLayout({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-        <Loading />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+            <Shield className="w-10 h-10 text-white" />
+          </div>
+          <Loading />
+          <p className="mt-4 text-slate-600 font-medium">Checking admin privileges...</p>
+        </div>
       </div>
     )
   }
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full mx-auto border border-slate-200">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
-            <CrownIcon className="w-10 h-10 text-red-500" />
+      <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-200 rounded-full blur-3xl opacity-30"></div>
+        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-200 rounded-full blur-3xl opacity-30"></div>
+        
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 max-w-md w-full mx-auto border border-white/60 relative z-10 transform transition-all duration-300 hover:shadow-2xl">
+          <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center shadow-lg">
+            <CrownIcon className="w-12 h-12 text-white" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4">Access Denied</h1>
-          <p className="text-slate-600 mb-2">You don’t have permission to access this page.</p>
-          <p className="text-slate-500 text-sm mb-8">This area is restricted to administrators only.</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent mb-4">
+            Access Restricted
+          </h1>
+          <p className="text-slate-700 mb-3 text-lg font-medium">Administrator Access Required</p>
+          <p className="text-slate-500 mb-8 leading-relaxed">
+            This area is reserved for authorized administrators only. Please contact your system administrator if you believe this is an error.
+          </p>
           <Link
             href="/"
-            className="bg-slate-800 hover:bg-slate-900 text-white flex items-center justify-center gap-3 mt-4 p-3 px-8 max-sm:text-sm rounded-xl transition-all duration-200 shadow-md hover:shadow-lg"
+            className="group bg-gradient-to-r from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white flex items-center justify-center gap-3 mt-4 p-4 px-8 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
           >
-            Return to Home <ArrowRightIcon size={18} />
+            <span className="font-semibold">Return to Home</span>
+            <ArrowRightIcon size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>
@@ -64,15 +79,21 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Background decorative elements */}
+      <div className="fixed top-0 right-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-20 -z-0"></div>
+      <div className="fixed bottom-0 left-0 w-96 h-96 bg-purple-100 rounded-full blur-3xl opacity-20 -z-0"></div>
+      
       <AdminNavbar
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         isSidebarOpen={isSidebarOpen}
       />
-      <div className="flex flex-1 h-full overflow-hidden">
+      
+      <div className="flex flex-1 h-full overflow-hidden relative z-10">
         <AdminSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 min-h-full p-4 lg:p-6">
+        
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/60 min-h-full p-6 lg:p-8 transition-all duration-300 hover:shadow-xl">
             {children}
           </div>
         </main>
