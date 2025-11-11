@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+export const dynamic = 'force-dynamic';
 
 export default function SetGoalPage() {
   const searchParams = useSearchParams();
