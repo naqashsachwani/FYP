@@ -15,15 +15,15 @@ const OurSpecs = () => {
         {ourSpecsData.map((spec, index) => (
           <div
             key={index}
-            className="relative bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition p-8 text-center group"
+            className="relative bg-white border border-slate-200 rounded-3xl shadow-md hover:shadow-2xl transition-transform duration-300 p-8 text-center group hover:-translate-y-2"
           >
             <div
-              className="absolute -top-6 left-1/2 -translate-x-1/2 size-12 flex items-center justify-center rounded-xl shadow-md text-white group-hover:scale-110 transition"
-              style={{ backgroundColor: spec.accent }}
+              className="absolute -top-8 left-1/2 -translate-x-1/2 w-14 h-14 flex items-center justify-center rounded-full shadow-lg text-white bg-gradient-to-r from-green-400 to-emerald-500 group-hover:scale-110 transition-transform duration-300"
             >
-              <spec.icon size={22} />
+              <spec.icon size={24} />
             </div>
-            <h3 className="mt-8 font-semibold text-lg text-slate-800">{spec.title}</h3>
+
+            <h3 className="mt-10 font-semibold text-xl text-slate-800">{spec.title}</h3>
             <p className="text-slate-600 text-sm mt-3 leading-relaxed">
               {spec.description}
             </p>

@@ -6,10 +6,12 @@ export async function GET(request) {
         let products = await prisma.product.findMany({
             where: {inStock: true},
             include: {
-                rating: {
+                ratings: {  // Changed from 'rating' to 'ratings'
                     select: {
-                        createdAt: true, rating: true, review: true,
-                        user: {select: {name: true, image:true}}
+                        createdAt: true, 
+                        rating: true, 
+                        review: true,
+                        user: {select: {name: true, image: true}}
                     }
                 },
                 store: true,
@@ -17,11 +19,11 @@ export async function GET(request) {
             orderBy: {createdAt: 'desc'}
         })
 
-        //remove products with store isActive false
+        // Remove products with store isActive false
         products = products.filter(product => product.store.isActive)
         return NextResponse.json({products})
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: "An interval server error occured"}, {status: 500});
+        return NextResponse.json({ error: "An internal server error occurred"}, {status: 500});
     }
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useUser, useClerk, UserButton, Protect} from "@clerk/nextjs";
+import { useUser, useClerk, UserButton, Protect } from "@clerk/nextjs";
 
 const Navbar = () => {
   const { user } = useUser();
@@ -30,17 +30,16 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-1 relative">
-            <h1 className="text-3xl lg:text-4xl font-bold text-slate-800">
+          <Link href="/" className="flex items-center gap-1 relative group">
+            <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 group-hover:text-green-600 transition-colors">
               <span className="text-green-600">Dream</span>Saver
             </h1>
             <Protect plan='plus'>
-              <p className="abcolute text-xs font-semibold -top-1-right-8 px-3 p-0.5 rounded-full flex
-              items-center gap-2 text-white bg-green-500">
+              <p className="absolute top-0 -right-4 text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500 text-white flex items-center justify-center shadow-md">
                 plus
               </p>
             </Protect>
@@ -64,7 +63,7 @@ const Navbar = () => {
           {/* Search (Desktop) */}
           <form
             onSubmit={handleSearch}
-            className="hidden lg:flex items-center w-72 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 text-sm focus-within:ring-2 focus-within:ring-green-400 transition"
+            className="hidden lg:flex items-center w-72 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 text-sm focus-within:ring-2 focus-within:ring-green-400 transition shadow-sm hover:shadow-md"
           >
             <Search size={18} className="text-slate-500" />
             <input
@@ -81,21 +80,21 @@ const Navbar = () => {
             {/* Wishlist */}
             <Link
               href="/wishlist"
-              className="hidden sm:flex items-center gap-2 text-slate-600 hover:text-green-600 transition p-2 rounded-lg hover:bg-slate-100"
+              className="hidden sm:flex items-center gap-2 text-slate-600 hover:text-green-600 transition p-2 rounded-xl hover:bg-green-50 shadow-sm hover:shadow-md"
             >
               <Heart size={20} />
               <span className="text-sm font-medium">Wishlist</span>
             </Link>
 
-            {/* Goals */}
+            {/* Cart / Goals */}
             <Link
               href="/cart"
-              className="relative flex items-center gap-2 text-slate-600 hover:text-green-600 transition p-2 rounded-lg hover:bg-slate-100"
+              className="relative flex items-center gap-2 text-slate-600 hover:text-green-600 transition p-2 rounded-xl hover:bg-green-50 shadow-sm hover:shadow-md"
             >
               <ShoppingCart size={20} />
               <span className="hidden sm:block text-sm font-medium">My Goals</span>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 text-xs text-white bg-green-500 size-5 rounded-full flex items-center justify-center shadow-md">
+                <span className="absolute -top-1 -right-1 text-xs text-white bg-green-500 w-5 h-5 rounded-full flex items-center justify-center shadow-md">
                   {cartCount}
                 </span>
               )}
@@ -105,34 +104,22 @@ const Navbar = () => {
             {!user ? (
               <button
                 onClick={openSignIn}
-                className="hidden sm:flex items-center px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:scale-105 active:scale-95"
+                className="hidden sm:flex items-center px-5 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl shadow-md hover:scale-105 transition-all duration-200 active:scale-95"
               >
                 Sign In
               </button>
             ) : (
               <div className="hidden sm:block">
-                <UserButton afterSignOutUrl="/">
-                  <UserButton.MenuItems>
-                    <UserButton.Action
-                      label="My Goals"
-                      labelIcon={<PackageIcon size={16} />}
-                      onClick={() => router.push("/orders")}
-                    />
-                  </UserButton.MenuItems>
-                </UserButton>
+                <UserButton afterSignOutUrl="/" />
               </div>
             )}
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition"
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition shadow-sm hover:shadow-md"
             >
-              {isMobileMenuOpen ? (
-                <X size={24} className="text-slate-600" />
-              ) : (
-                <Menu size={24} className="text-slate-600" />
-              )}
+              {isMobileMenuOpen ? <X size={24} className="text-slate-600" /> : <Menu size={24} className="text-slate-600" />}
             </button>
           </div>
         </div>
@@ -141,7 +128,7 @@ const Navbar = () => {
         <div className="lg:hidden pb-3">
           <form
             onSubmit={handleSearch}
-            className="flex items-center gap-3 bg-slate-100 px-4 py-2.5 rounded-xl border border-slate-200"
+            className="flex items-center gap-3 bg-slate-100 px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm focus-within:ring-2 focus-within:ring-green-400"
           >
             <Search size={18} className="text-slate-500" />
             <input
