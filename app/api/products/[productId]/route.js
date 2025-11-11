@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(request, { params }) {
+export async function GET(request, context) {
+  const { params } = await context; // ✅ Await the context object
   const { productId } = params;
 
   if (!productId) {
@@ -15,11 +16,11 @@ export async function GET(request, { params }) {
         select: {
           rating: true,
           review: true,
-          user: { select: { name: true, image: true } }
-        }
+          user: { select: { name: true, image: true } },
+        },
       },
-      store: true
-    }
+      store: true,
+    },
   });
 
   if (!product) {
