@@ -11,10 +11,7 @@ import {
   ShoppingBasketIcon,
   StoreIcon,
   TagsIcon,
-  TrendingUp,
-  Calendar,
-  BarChart3,
-  Download
+  TrendingUp
 } from "lucide-react"
 
 export default function AdminDashboard() {
@@ -38,7 +35,6 @@ export default function AdminDashboard() {
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
-      trend: '+12%'
     },
     {
       title: 'Total Revenue',
@@ -47,7 +43,6 @@ export default function AdminDashboard() {
       color: 'from-green-500 to-green-600',
       bgColor: 'bg-green-50',
       textColor: 'text-green-700',
-      trend: '+23%'
     },
     {
       title: 'Total Orders',
@@ -56,7 +51,6 @@ export default function AdminDashboard() {
       color: 'from-purple-500 to-purple-600',
       bgColor: 'bg-purple-50',
       textColor: 'text-purple-700',
-      trend: '+8%'
     },
     {
       title: 'Total Stores',
@@ -65,7 +59,6 @@ export default function AdminDashboard() {
       color: 'from-orange-500 to-orange-600',
       bgColor: 'bg-orange-50',
       textColor: 'text-orange-700',
-      trend: '+5%'
     },
   ]
 
@@ -120,10 +113,6 @@ export default function AdminDashboard() {
               Real-time Analytics
             </span>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-2xl text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
-            <Calendar size={16} />
-            <span className="text-sm font-medium">Last 30 Days</span>
-          </button>
         </div>
       </div>
 
@@ -140,10 +129,6 @@ export default function AdminDashboard() {
                 <p className="text-2xl sm:text-3xl font-bold text-slate-800 mb-1">
                   {card.value}
                 </p>
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs font-medium ${card.textColor}`}>{card.trend}</span>
-                  <span className="text-slate-400 text-xs">vs last month</span>
-                </div>
               </div>
               <div
                 className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r ${card.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-md`}
@@ -157,26 +142,10 @@ export default function AdminDashboard() {
 
       {/* Orders Chart */}
       <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6">
-          <div>
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-800">
-              Order Analytics
-            </h2>
-            <p className="text-slate-600 text-xs sm:text-sm">
-              Overview of orders and revenue trends
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 mt-3 sm:mt-0">
-            <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <BarChart3 size={16} className="text-slate-600" />
-              <span className="text-sm text-slate-700 font-medium">Live Data</span>
-            </div>
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
-              <Download size={16} />
-              <span className="text-sm">Export</span>
-            </button>
-          </div>
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-slate-800">
+            Order Analytics
+          </h2>
         </div>
 
         <div className="w-full overflow-x-auto">
