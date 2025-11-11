@@ -1,8 +1,5 @@
 import React, { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-
-// dynamic import the client component to avoid hydration warnings (optional)
-const SetGoalClient = dynamic(() => import('./SetGoalClient'), { ssr: false });
+import SetGoalClient from './SetGoalClient';
 
 export default function SetGoalPage() {
   return (
